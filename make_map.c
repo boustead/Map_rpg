@@ -62,18 +62,20 @@ cell **init(int width, int height)
 
 void create_view(sfVector2f center)
 {
+    // center.x -= 500;
+    // center.y -= 500;
     sfFloatRect rec = {0, 0, 50, 50};
     sfView *view = sfView_create();
     view = sfView_createFromRect(rec);
     sfView_setCenter(view, center);
-    sfView_zoom(view, 0.5);
+    //sfView_zoom(view, 0.5);
 }
 
 void mk_win(cell **screen)
 {
     sfRenderWindow *window;
     sfVideoMode mode = {800, 600, 32};
-    window = sfRenderWindow_create(mode, "My awesome window",
+    window = sfRenderWindow_create(mode, "vidéo gayme",
 sfResize | sfClose, NULL);
     //view
     //sfVector2f size = {100, 100};
@@ -93,6 +95,7 @@ sfResize | sfClose, NULL);
     int y = 10;
     sfVector2f pplayer = screen[x][y].pos;
     sfSprite_setPosition(splayer, pplayer);
+    //sfView_zoom(view, 0.1);
     //create_view(pplayer);
 
     while (sfRenderWindow_isOpen(window)) {
