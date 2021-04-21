@@ -31,7 +31,7 @@ void draw(cell **screen, int height, int width)
             //printf("|%.1f,%.1f|", screen[i][j].pos.x, screen[i][j].pos.y);
             printf("%i", screen[i][j].type);
         }
-        //if (i != height-1)
+        // if (i != height-1)
         my_putchar('\n');
     }
 }
@@ -50,13 +50,24 @@ cell **init(int width, int height)
     }
     for (int i = 0; i < height; i++) {
         for (j = 0; j < width; j++) {
+            if (i < 40)
             res[i][j].type = 0;
+            else
+            res[i][j].type = 1;
+            if (j < 40)
+            res[i][j].type = 0;
+            else
+            res[i][j].type = 1;
             res[i][j].pos = x;
             x.y += 20;
         }
         x.y = 0;
         x.x += 20;
     }
+    res[5][5].type = 1;
+     res[6][5].type = 1;
+      res[5][6].type = 1;
+       res[6][6].type = 1;
     return res;
 }
 
@@ -68,22 +79,19 @@ void create_view(sfVector2f center)
     sfView *view = sfView_create();
     view = sfView_createFromRect(rec);
     sfView_setCenter(view, center);
-    //sfView_zoom(view, 0.5);
 }
 
-void mk_win(cell **screen)
+void mk_win(cell **screen, int max, int maxy)
 {
     sfRenderWindow *window;
     sfVideoMode mode = {800, 600, 32};
     window = sfRenderWindow_create(mode, "vidéo gayme",
 sfResize | sfClose, NULL);
-    //view
-    //sfVector2f size = {100, 100};
+    //view --------
     sfFloatRect rec = {0, 0, 320, 320};
     sfView *view = sfView_create();
     view = sfView_createFromRect(rec);
-    //sfView_setSize(view, size);
-    //create texture sprite ect..
+    //create texture sprite ect..---------
     sfTexture *tbg = sfTexture_createFromFile("sky.png", NULL);
     sfSprite *sbg = sfSprite_create();
     sfSprite_setTexture(sbg, tbg, sfTrue);
@@ -91,31 +99,30 @@ sfResize | sfClose, NULL);
     sfTexture *tplayer = sfTexture_createFromFile("aim.png", NULL);
     sfSprite *splayer = sfSprite_create();
     sfSprite_setTexture(splayer, tplayer, sfTrue);
-    int x = 10;
-    int y = 10;
+    int x = 2;
+    int y = 2;
     sfVector2f pplayer = screen[x][y].pos;
     sfSprite_setPosition(splayer, pplayer);
-    //sfView_zoom(view, 0.1);
     //create_view(pplayer);
 
     while (sfRenderWindow_isOpen(window)) {
         //create_view(pplayer);
         sfView_setCenter(view, pplayer);
-        //sfView_zoom(view, 0.1);
         pplayer = screen[x][y].pos;
         sfSprite_setPosition(splayer, pplayer);
+        //event//movement-------------
         sfEvent event;
         while (sfRenderWindow_pollEvent(window, &event)) {
             if (event.type == sfEvtClosed)
                 sfRenderWindow_close(window);
             if (event.type == sfEvtKeyPressed) {
-                if (event.key.code == sfKeyS)
+                if (event.key.code == sfKeyS && y < maxy-1 && screen[x][y+1].type != 1)
                 y++;
-                if (event.key.code == sfKeyZ && y > 0)
+                if (event.key.code == sfKeyZ && y > 1  && screen[x][y-1].type != 1)
                 y--;
-                if (event.key.code == sfKeyD)
+                if (event.key.code == sfKeyD  && x < max-1 && screen[x+1][y].type != 1)
                 x++;
-                if (event.key.code == sfKeyQ && x > 0)
+                if (event.key.code == sfKeyQ && x > 1  && screen[x-1][y].type != 1)
                 x--;
             sfSprite_setPosition(splayer, pplayer);
             }
@@ -132,7 +139,7 @@ int main(int argc, char const *argv[])
 {
     cell **screen;
     screen = init(50, 50);
-    mk_win(screen);
-    draw(screen, 50, 50);
+    mk_win(screen, 50, 50);
+    //draw(screen, 50, 50);
     return 0;
 }
